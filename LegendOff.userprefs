@@ -1,0 +1,20 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\Stats.cs">
+    <Files>
+      <File FileName="Assets\scripts\AI\WarriorAI.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\DamageEnemy.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\GUI\IngameGUI.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\DamagePlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Stats.cs" Line="70" Column="34" />
+      <File FileName="Assets\scripts\CameraController.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\RoomController.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\DroppedPosessions.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\KeyboardControls.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

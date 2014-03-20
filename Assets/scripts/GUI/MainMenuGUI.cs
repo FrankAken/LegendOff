@@ -16,4 +16,11 @@ public class MainMenuGUI : MonoBehaviour {
 	void OnGUI () {
 		GUI.Label(new Rect(widthCenter - 50, heightCenter, 100, 20),"Press Start");
 	}
+
+	void Update(){
+		if (Input.GetKey (KeyCode.Return)) {
+			Debug.Log("Start was pressed");
+			Application.LoadLevel("testing");
+		}
+	}
 }

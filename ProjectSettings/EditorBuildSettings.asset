@@ -17,3 +17,5 @@ EditorBuildSettings:
     path: Assets/scenes/dungeon_2.unity
   - enabled: 1
     path: Assets/scenes/dungeon_1.unity
+  - enabled: 1
+    path: Assets/scenes/mainmenu.unity

@@ -4,23 +4,39 @@ using System.Collections;
 public class Stats : MonoBehaviour {
 
 	public Vector3 spawn;
-	public float health = 10f;
-	public float _health = 10f;
-	public float stamina = 20f;
-	public float _stamina = 20f;
-	public bool poisoned = false;
-	public bool _poisoned = false;
-	public float poisonDamage = 0.2f;
-	public bool bleeding = false;
-	public bool _bleeding = false;
-	public float bleedDamage = 0.5f;	
-	public float speed = 25f;
-	public bool running = false;
-	public float jumpAccel = 30f;
-	public int viewDir = 6;
+	public float health;
+	public float stamina;
+	public bool poisoned;
+	public float poisonDamage;
+	public bool bleeding;
+	public float bleedDamage;	
+	public float speed;
+	public bool running;
+	public float dashMultiplier;
+	public float dashDuration;
+	public float dashCost;
+	public float runCost;
+	public int viewDir;
 	//1=up,2=up-right,3=right,4=down-right,5=down,6=down-left,7=left,8=up-left
-	public int _viewDir = 6;
+	public GameObject weapon;
+	public int souls;
+	public float _health;
+	public float _stamina;
+	public bool _poisoned;
+	public bool _bleeding ;
+	public int _viewDir;
+	public int _souls;
+	public float _speed;
 
+	void Awake(){
+		_health = health;
+		_stamina = stamina;
+		_poisoned = poisoned;
+		_bleeding = bleeding;
+		_viewDir = viewDir;
+		_souls = souls;
+		_speed = speed;
+	}
 	void Start(){
 		spawn = transform.position;
 	}
@@ -28,8 +44,14 @@ public class Stats : MonoBehaviour {
 	void Update(){
 		Debug.Log(gameObject.name+" | Health: "+health+" Stamina: "+stamina);
 		if(health <= 0){
-			Debug.Log("YOU DIED");
-			Reset();
+			Debug.Log(gameObject.name+" DIED");
+			if(gameObject.tag == "Player"){
+				Reset();
+			}
+			else{
+				GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>().souls += souls;
+				Destroy(gameObject);
+			}
 		}
 		if(poisoned){
 			//Recoloring will be replaced with Animation
@@ -41,6 +63,16 @@ public class Stats : MonoBehaviour {
 			gameObject.transform.renderer.material.color = Color.red;
 			health -= bleedDamage;
 		}
+		if (running) {
+			InvokeRepeating("RunExhaustion",0f,1f);
+		}
+		if (!running) {
+			CancelInvoke("RunExhaustion");
+		}
+	}
+	
+	void RunExhaustion(){
+		stamina -= runCost;
 	}
 
 	public void Reset(){
