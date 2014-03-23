@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GamepadControls : MonoBehaviour {
 
+	//Controls if Gamepad is connected and activated in GUI
+
 	GameObject player;
 	// Use this for initialization
 	void Start () {

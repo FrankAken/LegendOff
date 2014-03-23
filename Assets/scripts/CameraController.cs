@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class CameraController: MonoBehaviour {
-	//supposedly a Component of the Tile-Collider
+
+	//Controls the CameraMovement
+
 	public Camera playerCamera;
 	public float camHeight = 6f;
 	public float camSpeed;

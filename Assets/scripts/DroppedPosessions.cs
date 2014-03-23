@@ -3,6 +3,9 @@ using System.Collections;
 
 public class DroppedPosessions : MonoBehaviour {
 
+	//Is to be applied to the GameObject the player has to pick up to regain his souls
+	//Is only collectable with previous amount of souls when picked up the first round after dying
+
 	public string pickupMessage;
 	public float despawnDuration;
 	GameObject player;

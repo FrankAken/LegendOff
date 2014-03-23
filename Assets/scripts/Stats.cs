@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Stats : MonoBehaviour {
 
+	//Contains Stats for PC or NPC
+	//will be migrated to global object for player and is then only for enemys
+
 	public Vector3 spawn;
 	public float health;
 	public float stamina;
@@ -27,6 +30,7 @@ public class Stats : MonoBehaviour {
 	public int _viewDir;
 	public int _souls;
 	public float _speed;
+	public bool moving;
 
 	void Awake(){
 		_health = health;
@@ -36,6 +40,7 @@ public class Stats : MonoBehaviour {
 		_viewDir = viewDir;
 		_souls = souls;
 		_speed = speed;
+		moving = false;
 	}
 	void Start(){
 		spawn = transform.position;
@@ -63,12 +68,16 @@ public class Stats : MonoBehaviour {
 			gameObject.transform.renderer.material.color = Color.red;
 			health -= bleedDamage;
 		}
-		if (running) {
+		if (running && moving) {
 			InvokeRepeating("RunExhaustion",0f,1f);
 		}
 		if (!running) {
 			CancelInvoke("RunExhaustion");
 		}
+		if (stamina <= 0) {
+			running = false;
+		}
+		moving = false;
 	}
 	
 	void RunExhaustion(){

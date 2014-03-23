@@ -3,10 +3,14 @@ using System.Collections;
 
 public class KeyboardControls : MonoBehaviour {
 
-	float weaponAngle;
+	//Standard Input Method
+	//WASD = Movement
+	//O = run while pressed
+	//J = Attack with equipped Weapon
+	//L = Dash (to evade)
 
+	float weaponAngle;
 	GameObject player, weaponInstance;
-	public float weaponSwingSpeed = 1f;
 	// Use this for initialization
 	void Start(){
 		player = GameObject.FindWithTag("Player");
@@ -17,11 +21,13 @@ public class KeyboardControls : MonoBehaviour {
 		CharacterControl();
 	}
 
+	//CharacterControls, Keymapping above
 	void CharacterControl(){
 		//physicsbased Movement
 		if (Input.GetKey(KeyCode.W)) {
 			//move forwards and set View Direction
 			player.GetComponent<Stats>().viewDir = 1;
+			player.GetComponent<Stats>().moving = true;
 			if(player.GetComponent<Stats>().running){
 				rigidbody.AddForce (transform.up * player.GetComponent<Stats>().speed * 2f);
 			}
@@ -32,6 +38,7 @@ public class KeyboardControls : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.S)) {
 			//move backwards
+			player.GetComponent<Stats>().moving = true;
 			if(player.GetComponent<Stats>().running){
 				rigidbody.AddForce (-transform.up * player.GetComponent<Stats>().speed * 2f);
 			}
@@ -42,6 +49,7 @@ public class KeyboardControls : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.D)) {		
 			//move right
+			player.GetComponent<Stats>().moving = true;
 			if(player.GetComponent<Stats>().running){
 				rigidbody.AddForce (transform.right * player.GetComponent<Stats>().speed * 2f);
 			}
@@ -52,6 +60,7 @@ public class KeyboardControls : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.A)) {	
 			//move left
+			player.GetComponent<Stats>().moving = true;
 			if(player.GetComponent<Stats>().running){
 				rigidbody.AddForce (-transform.right * player.GetComponent<Stats>().speed * 2f);
 			}
@@ -68,12 +77,7 @@ public class KeyboardControls : MonoBehaviour {
 			}
 		}
 
-		/*if(Input.GetKey (KeyCode.O)) {
-			if(player.GetComponent<Stats>().running == true){
-				InvokeRepeating("RunExhaustion",0f,1f);
-			}
-		}*/
-
+		//Stop running when Key is not longer pressed
 		if(Input.GetKeyUp(KeyCode.O)){
 			//stop running when not pressed
 			player.GetComponent<Stats>().running = false;
@@ -99,37 +103,28 @@ public class KeyboardControls : MonoBehaviour {
 				Invoke("ResetSpeed",player.GetComponent<Stats>().dashDuration);
 			}
 		}
-
-		if(Input.GetKey(KeyCode.I)){
-			//Inventory
-		}
-
-		if(Input.GetKey(KeyCode.K)){
-			//Block
-		}
-		if(Input.GetKey(KeyCode.R)){
-			//Reset Player
-			player.GetComponent<Stats>().Reset();
-		}
-		if(Input.GetKey(KeyCode.P)){
-		}
 	}
 
+	//Attack with Weapon
 	void strike(){
-		Debug.Log("Strike!");
 		if (weaponInstance == null) {
 			weaponInstance = (GameObject)Instantiate (player.GetComponent<Stats> ().weapon, player.transform.position, Quaternion.identity);
 			weaponInstance.transform.Rotate (90, 0, 90);
 		}
-		weaponInstance.SetActive(true);
-		weaponInstance.transform.parent = player.transform;
-		weaponInstance.transform.localPosition = new Vector3 (0.3f, -0.2f, -0.01f);
+		if (player.GetComponent<Stats> ().stamina > 0) {
+			player.GetComponent<Stats> ().stamina -= weaponInstance.GetComponent<DamageEnemy> ().attackCost;
+			weaponInstance.SetActive (true);
+			weaponInstance.transform.parent = player.transform;
+			weaponInstance.transform.localPosition = new Vector3 (0.3f, -0.2f, -0.01f);
+		}
 	}
 
+	//Reset Speed when the player is NOT longer running
 	void ResetSpeed(){
 		player.GetComponent<Stats> ().speed = player.GetComponent<Stats> ()._speed;
 	}
 
+	//Drain Stamina while Running
 	void RunExhaustion(){
 		player.GetComponent<Stats> ().stamina -= player.GetComponent<Stats> ().runCost;
 	}

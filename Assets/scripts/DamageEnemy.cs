@@ -2,19 +2,16 @@
 using System.Collections;
 
 public class DamageEnemy : MonoBehaviour {
+
+	//Is to be applied to a Weapon Trigger
 	
-	public float damage = 1f;
-	public float knockback = 100f;
+	public float damage;
+	public float attackCost;
 	
 	void OnTriggerEnter(Collider collider){
 		if(collider.tag == "Enemy"){
-			transform.parent.transform.renderer.material.color = Color.red;
 			//Deal Damage to Enemy
-			collider.GetComponent<Stats>().health -= 1f;
+			collider.GetComponent<Stats>().health -= damage;
 		}
-	}
-
-	void OnTriggerExit(Collider collider){
-		transform.parent.transform.renderer.material.color = Color.white;
 	}
 }

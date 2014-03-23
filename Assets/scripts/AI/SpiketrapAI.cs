@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SpiketrapAI : MonoBehaviour {
 
+	//AI for the Spiketrap
+
 	Vector3 newPos;
 	public bool stopped = false;
 	public float speed = 7.0f;

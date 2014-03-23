@@ -11,7 +11,7 @@ public class IngameGUI : MonoBehaviour {
 	public Texture2D staminaBar;
 	public Texture2D poisonIcon;
 	public Texture2D bleedIcon;
-	string soulDisplay;
+	string soulDisplay, healthDisplay, staminaDisplay;
 
 	// Use this for initialization
 	void Awake () {
@@ -24,9 +24,11 @@ public class IngameGUI : MonoBehaviour {
 	}
 
 	void OnGUI(){
-		GUI.DrawTexture (new Rect (0, 0, widthBG, heightBG), background);
+		//GUI.DrawTexture (new Rect (0, 0, widthBG, heightBG), background);
 		//Debug
-		GUI.Label(new Rect(10,heightBG + 10, 100,20), soulDisplay);
+		GUI.Box(new Rect(10,heightBG + 10, 100,20), "Health: "+healthDisplay);
+		GUI.Box(new Rect(10,heightBG + 30, 100,20), "Stamina: "+staminaDisplay);
+		GUI.Box(new Rect(10,heightBG + 50, 100,20), "Souls: "+soulDisplay);
 	}
 
 	void Update(){
@@ -34,5 +36,7 @@ public class IngameGUI : MonoBehaviour {
 			Application.LoadLevel("mainmenu");
 		}
 		soulDisplay = ""+player.GetComponent<Stats> ().souls;
+		healthDisplay = "" + player.GetComponent<Stats> ().health;
+		staminaDisplay = "" + player.GetComponent<Stats> ().stamina;
 	}
 }
