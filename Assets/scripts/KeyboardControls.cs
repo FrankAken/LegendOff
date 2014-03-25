@@ -3,129 +3,116 @@ using System.Collections;
 
 public class KeyboardControls : MonoBehaviour {
 
-	//Standard Input Method
-	//WASD = Movement
-	//O = run while pressed
-	//J = Attack with equipped Weapon
-	//L = Dash (to evade)
+	//Standard Eingabemethode
+	//WASD = Bewegung
+	//O = laufe wenn gehalten
+	//J = greife mit ausgerüsteter Waffe an
+	//L = in gesteuerte Richtung ausweichen
 
-	float weaponAngle;
-	GameObject player, weaponInstance;
-	// Use this for initialization
+	//GameObject player;
+	GameObject weaponInstance;
+
 	void Start(){
-		player = GameObject.FindWithTag("Player");
+		//player = GameObject.FindWithTag("Player");
 	}
 
-	// Update is called once per frame, deltaTime varies
 	void Update () {
 		CharacterControl();
 	}
 
-	//CharacterControls, Keymapping above
+	//CharacterControls, Tastenbelegung oben
 	void CharacterControl(){
-		//physicsbased Movement
+		//physikbasierte Bewegung
+		//bewege Vorwärts
 		if (Input.GetKey(KeyCode.W)) {
-			//move forwards and set View Direction
-			player.GetComponent<Stats>().viewDir = 1;
-			player.GetComponent<Stats>().moving = true;
-			if(player.GetComponent<Stats>().running){
-				rigidbody.AddForce (transform.up * player.GetComponent<Stats>().speed * 2f);
+			Persistent.persist.moving = true;
+			if(Persistent.persist.running){
+				rigidbody.AddForce (transform.up * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
 			else{
-				rigidbody.AddForce (transform.up * player.GetComponent<Stats>().speed);
+				rigidbody.AddForce (transform.up * Persistent.persist.speed);
 			}
 		}
-
+		//bewege Rückwärts
 		if (Input.GetKey(KeyCode.S)) {
-			//move backwards
-			player.GetComponent<Stats>().moving = true;
-			if(player.GetComponent<Stats>().running){
-				rigidbody.AddForce (-transform.up * player.GetComponent<Stats>().speed * 2f);
+			Persistent.persist.moving = true;
+			if(Persistent.persist.running){
+				rigidbody.AddForce (-transform.up * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
 			else{
-				rigidbody.AddForce (-transform.up * player.GetComponent<Stats>().speed);
+				rigidbody.AddForce (-transform.up * Persistent.persist.speed);
+			}
+		}
+		//bewege nach rechts
+		if (Input.GetKey(KeyCode.D)) {
+			Persistent.persist.moving = true;
+			if(Persistent.persist.running){
+				rigidbody.AddForce (transform.right * Persistent.persist.speed * Persistent.persist.runMultiplier);
+			}
+			else{
+				rigidbody.AddForce (transform.right * Persistent.persist.speed);
 			}
 		}
 
-		if (Input.GetKey(KeyCode.D)) {		
-			//move right
-			player.GetComponent<Stats>().moving = true;
-			if(player.GetComponent<Stats>().running){
-				rigidbody.AddForce (transform.right * player.GetComponent<Stats>().speed * 2f);
-			}
-			else{
-				rigidbody.AddForce (transform.right * player.GetComponent<Stats>().speed);
-			}
-		}
-
+		//bewege nach links
 		if (Input.GetKey(KeyCode.A)) {	
-			//move left
-			player.GetComponent<Stats>().moving = true;
-			if(player.GetComponent<Stats>().running){
-				rigidbody.AddForce (-transform.right * player.GetComponent<Stats>().speed * 2f);
+			Persistent.persist.moving = true;
+			if(Persistent.persist.running){
+				rigidbody.AddForce (-transform.right * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
 			else{
-				rigidbody.AddForce (-transform.right * player.GetComponent<Stats>().speed);
+				rigidbody.AddForce (-transform.right * Persistent.persist.speed);
 			}
 		}
-
-		//Run while Button is pressed, detracts certain amount of Stamina while running;
+		//laufe während der Knopf gehalten wird, subtrahiert gewissen Betrag von der Ausdauer pro gewisser Zeiteinheit
 		if(Input.GetKeyDown(KeyCode.O)){
-			//Run when pressed and if stamina allows
-			if(player.GetComponent<Stats>().stamina > 0){
-				player.GetComponent<Stats>().running = true;
+			//Renne nur wenn genügend Ausdauer vorhanden
+			if(Persistent.persist.stamina > 0){
+				Persistent.persist.running = true;
 			}
 		}
 
-		//Stop running when Key is not longer pressed
+		//höre auf zu laufen, wenn der Knopf nicht mehr gehalten wird
 		if(Input.GetKeyUp(KeyCode.O)){
-			//stop running when not pressed
-			player.GetComponent<Stats>().running = false;
-			//CancelInvoke("RunExhaustion");
+			Persistent.persist.running = false;
 		}
 
-		//Strike with equipped Weapon. Weapon is out as long as Button is pressed. 
-		//Does Damage only once when a Enemy touches the Weapon.
+		//Schlage mit ausgerüsteter Waffe zu, Waffe bleibt draussen solange der Knopf gehalten wird 
+		//Fügt einem Gegner nur einmalig Schaden zu
 		if(Input.GetKeyDown(KeyCode.J)){
 			strike ();
 		}
-
+		//Mache Waffe unsichtbar wenn nicht angegriffen wird
 		if (Input.GetKeyUp (KeyCode.J)) {			
 			weaponInstance.SetActive (false);
 		}
-
-		//Dash, subtracts Value of dashCost from total Stamina. 
-		//When the Stamina is Zero or lower, Dashing is not allowed and will not be executed
+		//Ausweichen, subtrahiert dashCost von der vorhandenen Ausdauer
+		//Ist die Ausdauer erschöpft oder negativ ist Ausweichen nicht erlaubt und wird nicht ausgeführt
 		if (Input.GetKeyDown (KeyCode.L)) {	
-			if(player.GetComponent<Stats>().stamina > 0){
-				player.GetComponent<Stats>().stamina -= player.GetComponent<Stats>().dashCost;
-				player.GetComponent<Stats>().speed *= player.GetComponent<Stats>().dashMultiplier;
-				Invoke("ResetSpeed",player.GetComponent<Stats>().dashDuration);
+			if(Persistent.persist.stamina > 0){
+				Persistent.persist.stamina -= Persistent.persist.dashCost;
+				Persistent.persist.speed *= Persistent.persist.dashMultiplier;
+				Invoke("ResetSpeed",Persistent.persist.dashDuration);
 			}
 		}
 	}
 
-	//Attack with Weapon
+	//Angriffsmethode
 	void strike(){
 		if (weaponInstance == null) {
-			weaponInstance = (GameObject)Instantiate (player.GetComponent<Stats> ().weapon, player.transform.position, Quaternion.identity);
+			weaponInstance = (GameObject)Instantiate (Persistent.persist.weapon, gameObject.transform.position, Quaternion.identity);
 			weaponInstance.transform.Rotate (90, 0, 90);
 		}
-		if (player.GetComponent<Stats> ().stamina > 0) {
-			player.GetComponent<Stats> ().stamina -= weaponInstance.GetComponent<DamageEnemy> ().attackCost;
+		if (Persistent.persist.stamina > 0) {
+			Persistent.persist.stamina -= weaponInstance.GetComponent<DamageEnemy> ().attackCost;
 			weaponInstance.SetActive (true);
-			weaponInstance.transform.parent = player.transform;
+			weaponInstance.transform.parent = gameObject.transform;
 			weaponInstance.transform.localPosition = new Vector3 (0.3f, -0.2f, -0.01f);
 		}
 	}
 
-	//Reset Speed when the player is NOT longer running
+	//Setze Geschwindigkeit zurück wenn der Spieler nicht mehr läuft
 	void ResetSpeed(){
-		player.GetComponent<Stats> ().speed = player.GetComponent<Stats> ()._speed;
-	}
-
-	//Drain Stamina while Running
-	void RunExhaustion(){
-		player.GetComponent<Stats> ().stamina -= player.GetComponent<Stats> ().runCost;
+		Persistent.persist.speed /= Persistent.persist.runMultiplier;
 	}
 }

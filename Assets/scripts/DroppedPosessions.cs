@@ -3,19 +3,20 @@ using System.Collections;
 
 public class DroppedPosessions : MonoBehaviour {
 
-	//Is to be applied to the GameObject the player has to pick up to regain his souls
-	//Is only collectable with previous amount of souls when picked up the first round after dying
+	//Gehört zum gameObject das der Spieler aufsammeln muss um seine Seelen nach einem Tod zurückzuerhalten
+	//ist nur existent in der ersten Runde nach dem Spielertod und wird beim nächsten neu gesetzt mit den dann akkumulierten Seelen
 
-	public string pickupMessage;
+	int soulsDropped;
 	public float despawnDuration;
-	GameObject player;
 
 	void OnTriggerEnter(Collider collider){
 		if (collider.tag == "Player") {
-			Debug.Log(pickupMessage);
-			gameObject.transform.renderer.material.color = Color.green;
-			//player.GetComponent<Stats>().souls = player.GetComponent<Stats>()._souls;
+			Persistent.persist.souls = soulsDropped;
 			Destroy (gameObject,despawnDuration);
 		}
+	}
+
+	void DropSouls(int souls){
+		soulsDropped = souls;
 	}
 }

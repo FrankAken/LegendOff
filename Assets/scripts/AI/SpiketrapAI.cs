@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpiketrapAI : MonoBehaviour {
 
-	//AI for the Spiketrap
+	//AI für die Stachelfalle
 
 	Vector3 newPos;
 	public bool stopped = false;
@@ -13,7 +13,6 @@ public class SpiketrapAI : MonoBehaviour {
 	public Vector3 origPos;
 
 	void Start(){
-		transform.renderer.material.color = Color.gray;
 		origPos = transform.position;
 	}
 
@@ -21,13 +20,14 @@ public class SpiketrapAI : MonoBehaviour {
 		newPos = posA;
 	}
 	
-	// Update is called once per frame
+	//beweget das gameObject kontinuierlich zwischen posA und posB hin- und her
 	void Update () {
 		if(transform.parent.GetComponent<RoomController>().visited){
 			Move();	
 		}
 	}
 
+	//stellt nächste Position des gameObject fest
 	void Move(){
 		transform.position = Vector3.MoveTowards(transform.position,newPos,Time.deltaTime * speed);
 		if(transform.position == posA){
@@ -38,6 +38,7 @@ public class SpiketrapAI : MonoBehaviour {
 		}
 	}
 
+	//setzt das gameObject auf seine Startposition zurück
 	public void Reset(){
 		transform.position = origPos;
 	}

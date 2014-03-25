@@ -3,27 +3,34 @@ using System.Collections;
 
 public class CameraController: MonoBehaviour {
 
-	//Controls the CameraMovement
+	//Kontrolliert die Kamerabewegung und stellt fest ob der Raum auf den die Kamera zeigt besucht ist oder nicht (vom Spieler)
 
 	public Camera playerCamera;
-	public float camHeight = 6f;
-	public float camSpeed;
+	float camHeight;
+	float camSpeed;
+	Vector3 playerPos;
+	GameObject player;
 	bool visited = false;
 
 	void Start(){
-		Vector3 playerPos = GameObject.FindWithTag("Player").gameObject.transform.position;
+		camHeight = Persistent.persist.camHeight;
+		camSpeed = Persistent.persist.camSpeed;
+		player = GameObject.FindWithTag ("Player");
+		playerPos = player.gameObject.transform.position;
 		playerCamera.transform.position = new Vector3(playerPos.x,camHeight,playerPos.z);
-		camSpeed = GameObject.FindWithTag("Player").GetComponent<Stats>().speed;
 	}
 
 	void Update(){
+		//Bewegt die Kamera auf besuchten Raum
 		if(visited){
 			Vector3 nextPos = new Vector3(transform.position.x,camHeight,transform.position.z);
+			//Interpoliert die Punkte zwischen Anfangspunkt und Endpunkt der Kamerabewegung (Kamerafahrt)
 			playerCamera.transform.position = Vector3.MoveTowards(playerCamera.transform.position,nextPos,Time.deltaTime*camSpeed);
 		}
 
 	}
 
+	//setzt den Raum als besucht, wenn der Spieler in den Collider eindringt und meldet dies an den RoomController weiter
 	void OnTriggerEnter(Collider collider){
 		if(collider.tag == "Player"){
 			visited = true;
@@ -31,6 +38,8 @@ public class CameraController: MonoBehaviour {
 		}
 	}
 
+	//setzt den Raum als unbesucht, wenn der Spieler den Raum verlässt und meldet dies an den RoomController weiter,
+	//setzt außerdem den Raum zurück
 	void OnTriggerExit(Collider collider){
 		if(collider.tag == "Player"){
 			visited = false;

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SceneChanger : MonoBehaviour {
 
-	//Change to defined Scene when entering Trigger
+	//Wechsel zur definierten Szene wenn der Collider berührt wird
 
 	public string changeTo = "testing";
 

@@ -3,9 +3,10 @@ using System.Collections;
 
 public class Spawn : MonoBehaviour {
 
+	//bei Berührung wird der Spawnpunkt des Spielers auf die Position des gameObject gelegt
+
 	void OnTriggerEnter(Collider collider){
 		if (collider.tag == "Player") {		
-			Debug.Log ("You rest here");
 			transform.renderer.material.color = Color.green;
 			collider.GetComponent<Stats>().spawn = transform.position;
 		}

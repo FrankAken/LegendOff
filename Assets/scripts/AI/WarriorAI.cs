@@ -3,25 +3,26 @@ using System.Collections;
 
 public class WarriorAI : MonoBehaviour {
 
-	// Update is called once per frame
+	//AI des Warrior-Gegners
+
 	void Update () {
 		if(transform.parent.GetComponent<RoomController>().visited){
 			MoveTo(DetectPlayer());
 		}
 	}
 
-	//Returns current position of the player
+	//gibt aktuelle Position des Spielers zurück
 	Vector3 DetectPlayer(){
 		Vector3 player = GameObject.FindGameObjectWithTag("Player").gameObject.transform.position;
 		return player;
 	}
 
-	//Moves gameObject to specified location 
+	//bewegt gameObject zu position
 	void MoveTo(Vector3 position){
 		transform.position = Vector3.Lerp(transform.position,position,Time.deltaTime);
 	}
 
-	//Resets Stats of the Warrior
+	//setze Stats des Gegners zurück
 	public void Reset(){
 		transform.position = gameObject.GetComponent<Stats>().spawn;
 		//Debug.Log (transform.name+" was resetted.");

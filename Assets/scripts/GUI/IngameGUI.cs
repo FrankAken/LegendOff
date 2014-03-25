@@ -3,8 +3,9 @@ using System.Collections;
 
 public class IngameGUI : MonoBehaviour {
 
+	//GUI die im Spiel angezeigt wird, gibt Auskunft über Leben, Ausdauer, Seelen, Waffe etc
+
 	float widthCenter, heightCenter, widthBG, heightBG;
-	GameObject player;
 	public float guiScale = 1f;
 	public Texture2D background;
 	public Texture2D lifebar;
@@ -13,30 +14,31 @@ public class IngameGUI : MonoBehaviour {
 	public Texture2D bleedIcon;
 	string soulDisplay, healthDisplay, staminaDisplay;
 
-	// Use this for initialization
 	void Awake () {
-		widthCenter = Screen.currentResolution.width / 2f;
-		heightCenter = Screen.currentResolution.height / 2f; 
-		widthBG = (Screen.currentResolution.width / 3f) * guiScale;
+		widthCenter = Screen.width / 2f;
+		heightCenter = Screen.height / 2f; 
+		widthBG = (Screen.width / 3f) * guiScale;
 		heightBG = widthBG / 4f;
-		player = GameObject.FindGameObjectWithTag ("Player");
-		soulDisplay = ""+0;
 	}
 
+	//Zeichnet GUI
 	void OnGUI(){
 		//GUI.DrawTexture (new Rect (0, 0, widthBG, heightBG), background);
 		//Debug
 		GUI.Box(new Rect(10,heightBG + 10, 100,20), "Health: "+healthDisplay);
-		GUI.Box(new Rect(10,heightBG + 30, 100,20), "Stamina: "+staminaDisplay);
-		GUI.Box(new Rect(10,heightBG + 50, 100,20), "Souls: "+soulDisplay);
+		GUI.Box(new Rect(10,heightBG + 40, 100,20), "Stamina: "+staminaDisplay);
+		GUI.Box(new Rect(10,heightBG + 70, 100,20), "Souls: "+soulDisplay);
+		GUI.Box(new Rect(10,heightBG + 100, 100,20), Screen.width+"x"+Screen.height);
 	}
 
-	void Update(){
+	void FixedUpdate(){
+		//Escape lädt das Hauptmenü
 		if (Input.GetKey (KeyCode.Escape)) {
 			Application.LoadLevel("mainmenu");
 		}
-		soulDisplay = ""+player.GetComponent<Stats> ().souls;
-		healthDisplay = "" + player.GetComponent<Stats> ().health;
-		staminaDisplay = "" + player.GetComponent<Stats> ().stamina;
+		//Update der Charakterwerte
+		soulDisplay = ""+Persistent.persist.souls;
+		healthDisplay = "" +Persistent.persist.health;
+		staminaDisplay = "" +Persistent.persist.stamina;
 	}
 }

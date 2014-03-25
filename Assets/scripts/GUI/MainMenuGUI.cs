@@ -3,23 +3,19 @@ using System.Collections;
 
 public class MainMenuGUI : MonoBehaviour {
 
+	//GUI für das Hauptmenü
+
 	float widthCenter, heightCenter;
-	
-	// Use this for initialization
 	void Awake () {
 		widthCenter = Screen.currentResolution.width / 2f;
 		heightCenter = Screen.currentResolution.height / 2f; 
-		
 	}
-	
-	// Update is called once per frame
+
 	void OnGUI () {
-		GUI.Label(new Rect(widthCenter - 50, heightCenter, 100, 20),"Press Start");
 	}
 
 	void Update(){
 		if (Input.GetKey (KeyCode.Return)) {
-			Debug.Log("Start was pressed");
 			Application.LoadLevel("testing");
 		}
 	}

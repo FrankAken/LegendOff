@@ -3,14 +3,15 @@ using System.Collections;
 
 public class DamageEnemy : MonoBehaviour {
 
-	//Is to be applied to a Weapon Trigger
+	//Gehört zum Player-Weapon-Trigger
 	
 	public float damage;
 	public float attackCost;
-	
+
+	//fügt Schaden pro Berührung zu
 	void OnTriggerEnter(Collider collider){
 		if(collider.tag == "Enemy"){
-			//Deal Damage to Enemy
+			//füge Gegner damage x Schaden zu 
 			collider.GetComponent<Stats>().health -= damage;
 		}
 	}

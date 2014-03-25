@@ -3,10 +3,10 @@ using System.Collections;
 
 public class GamepadControls : MonoBehaviour {
 
-	//Controls if Gamepad is connected and activated in GUI
+	//Steuerung wenn ein Gamepad verbunden ist und in den Optionen aktiviert ist
 
 	GameObject player;
-	// Use this for initialization
+
 	void Start () {
 		player = GameObject.FindWithTag("Player");
 	}
