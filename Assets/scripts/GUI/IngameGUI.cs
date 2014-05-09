@@ -15,6 +15,20 @@ public class IngameGUI : MonoBehaviour {
 	public Texture2D poisonIcon;
 	public Texture2D bleedIcon;
 	string soulDisplay, healthDisplay, staminaDisplay;
+	WeaponValues playerWeaponStats;
+	ArmorValues playerHelmetStats;
+	ArmorValues playerCuirassStats;
+	ArmorValues playerTrousersStats;
+	ArmorValues playerBootsStats;
+
+	
+	void Start(){
+		playerWeaponStats = Persistent.persist.weapon.GetComponent<WeaponValues> ();
+		//playerHelmetStats = Persistent.persist.helmet.GetComponent<ArmorValues> ();
+		playerCuirassStats = Persistent.persist.cuirass.GetComponent<ArmorValues> ();
+		//playerTrousersStats = Persistent.persist.trousers.GetComponent<ArmorValues> ();
+		//playerBootsStats = Persistent.persist.boots.GetComponent<ArmorValues> ();
+	}
 
 	//Zeichnet GUI
 	void OnGUI(){
@@ -29,7 +43,10 @@ public class IngameGUI : MonoBehaviour {
 			GUI.Box (new Rect (10, Screen.height - 40, 100, 20), "Health: " + healthDisplay);
 			GUI.Box (new Rect (110, Screen.height - 40, 100, 20), "Stamina: " + staminaDisplay);
 			GUI.Box (new Rect (210, Screen.height - 40, 100, 20), "Souls: " + soulDisplay);
-			GUI.Box (new Rect (310, Screen.height - 40, 100, 20), Screen.width + "x" + Screen.height);
+			GUI.Box (new Rect (410, Screen.height - 40, 100, 20), Screen.width + "x" + Screen.height);
+			GUI.Box (new Rect (510, Screen.height - 40, 100, 20), "ViewDir"+Persistent.persist.ViewDir);
+			GUI.Box (new Rect (Screen.width - 210, Screen.height - 40, 200, 20), playerCuirassStats.cuirassName+"+"+playerCuirassStats.armorLevel);
+			GUI.Box (new Rect (Screen.width - 210, Screen.height - 60, 200, 20), playerWeaponStats.weaponName+"+"+playerWeaponStats.weaponLevel);
 		}
 	}
 

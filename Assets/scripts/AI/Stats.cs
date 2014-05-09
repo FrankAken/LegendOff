@@ -7,47 +7,28 @@ public class Stats : MonoBehaviour {
 
 	public Vector3 spawn;
 	public float health;
-	public float stamina;
+	public float maxHealth;
+	public bool dead = false;
 	public int souls;
-	public float armorClass;
-	public int viewDir;
-	//1=up,2=up-right,3=right,4=down-right,5=down,6=down-left,7=left,8=up-left
-	public GameObject weapon;
-	float _health;
-	float _stamina;
-	bool _poisoned;
-	bool _bleeding ;
-	int _viewDir;
-	int _souls;
 
-	void Awake(){
-		_health = health;
-		_stamina = stamina;
-		_viewDir = viewDir;
-		_souls = souls;
-	}
-
+	//setze Position des transform als spawn-Punkt für Reset()
 	void Start(){
 		spawn = transform.position;
 	}
 
 	void Update(){
-		if(health <= 0){
-			Debug.Log(gameObject.name+" DIED");
-			if(gameObject.tag == "Player"){
-				Reset();
-			}
-			else{
-				GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>().souls += souls;
-				Destroy(gameObject);
-			}
+		//füge Seelen zu Spielerkonto hinzu und zerstöre gameObject
+		if(health <= 0f){
+			Persistent.persist.souls += souls;
+			dead = true;
+			Debug.Log (transform.name+" was killed");
 		}
 	}
 
+	//wird ausgeführt wenn der Spieler rastet, NICHT beim Tod des Gegners
 	public void Reset(){
-		health = _health;
-		stamina = _stamina;
+		health = maxHealth;
 		transform.position = spawn;
-		viewDir = _viewDir;
+		Debug.Log (transform.name+" 's Reset was called");
 	}
 }

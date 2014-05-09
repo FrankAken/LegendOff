@@ -9,8 +9,6 @@ public class KeyboardControls : MonoBehaviour {
 	//J = greife mit ausgerüsteter Waffe an
 	//L = in gesteuerte Richtung ausweichen
 
-	GameObject weaponInstance;
-
 	void Update () {
 		CharacterControl();
 	}
@@ -21,6 +19,7 @@ public class KeyboardControls : MonoBehaviour {
 		//bewege Vorwärts
 		if (Input.GetKey(KeyCode.W)) {
 			Persistent.persist.moving = true;
+			Persistent.persist.ViewDir = 1;
 			if(Persistent.persist.running){
 				rigidbody.AddForce (transform.up * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
@@ -31,6 +30,7 @@ public class KeyboardControls : MonoBehaviour {
 		//bewege Rückwärts
 		if (Input.GetKey(KeyCode.S)) {
 			Persistent.persist.moving = true;
+			Persistent.persist.ViewDir = 5;
 			if(Persistent.persist.running){
 				rigidbody.AddForce (-transform.up * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
@@ -41,6 +41,7 @@ public class KeyboardControls : MonoBehaviour {
 		//bewege nach rechts
 		if (Input.GetKey(KeyCode.D)) {
 			Persistent.persist.moving = true;
+			Persistent.persist.ViewDir = 3;
 			if(Persistent.persist.running){
 				rigidbody.AddForce (transform.right * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
@@ -52,6 +53,7 @@ public class KeyboardControls : MonoBehaviour {
 		//bewege nach links
 		if (Input.GetKey(KeyCode.A)) {	
 			Persistent.persist.moving = true;
+			Persistent.persist.ViewDir = 7;
 			if(Persistent.persist.running){
 				rigidbody.AddForce (-transform.right * Persistent.persist.speed * Persistent.persist.runMultiplier);
 			}
@@ -75,11 +77,14 @@ public class KeyboardControls : MonoBehaviour {
 		//Schlage mit ausgerüsteter Waffe zu, Waffe bleibt draussen solange der Knopf gehalten wird 
 		//Fügt einem Gegner nur einmalig Schaden zu
 		if(Input.GetKeyDown(KeyCode.J)){
-			strike ();
+			if(Persistent.persist.stamina > 0){
+				Persistent.persist.stamina -= Persistent.persist.weaponInstance.GetComponent<WeaponValues> ().attackCost;
+				Persistent.persist.weaponInstance.SetActive (true);
+			}
 		}
 		//Mache Waffe unsichtbar wenn nicht angegriffen wird
 		if (Input.GetKeyUp (KeyCode.J)) {			
-			weaponInstance.SetActive (false);
+			Persistent.persist.weaponInstance.SetActive (false);
 		}
 		//Ausweichen, subtrahiert dashCost von der vorhandenen Ausdauer
 		//Ist die Ausdauer erschöpft oder negativ ist Ausweichen nicht erlaubt und wird nicht ausgeführt
@@ -89,20 +94,6 @@ public class KeyboardControls : MonoBehaviour {
 				Persistent.persist.speed *= Persistent.persist.dashMultiplier;
 				Invoke("ResetSpeed",Persistent.persist.dashDuration);
 			}
-		}
-	}
-
-	//Angriffsmethode
-	void strike(){
-		if (weaponInstance == null) {
-			weaponInstance = (GameObject)Instantiate (Persistent.persist.weapon, gameObject.transform.position, Quaternion.identity);
-			weaponInstance.transform.Rotate (90, 0, 90);
-		}
-		if (Persistent.persist.stamina > 0) {
-			Persistent.persist.stamina -= weaponInstance.GetComponent<DamageEnemy> ().attackCost;
-			weaponInstance.SetActive (true);
-			weaponInstance.transform.parent = gameObject.transform;
-			weaponInstance.transform.localPosition = new Vector3 (0.3f, -0.2f, -0.01f);
 		}
 	}
 

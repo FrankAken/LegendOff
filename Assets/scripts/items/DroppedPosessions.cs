@@ -7,8 +7,10 @@ public class DroppedPosessions : MonoBehaviour {
 	//ist nur existent in der ersten Runde nach dem Spielertod und wird beim nächsten neu gesetzt mit den dann akkumulierten Seelen
 
 	int soulsDropped;
+	int deathsWhenDropped;
 	public float despawnDuration;
 
+	//erhalte Seelen zurück bei Berührung
 	void OnTriggerEnter(Collider collider){
 		if (collider.tag == "Player") {
 			Persistent.persist.souls = soulsDropped;
@@ -16,7 +18,14 @@ public class DroppedPosessions : MonoBehaviour {
 		}
 	}
 
-	void DropSouls(int souls){
+	//ausführen wenn der Charakter stirbt
+	public void StoreSouls(int souls){
 		soulsDropped = souls;
+		deathsWhenDropped = Persistent.persist.deathCounter;
+	}
+	void Update(){
+		if (Persistent.persist.deathCounter > deathsWhenDropped) {
+			Destroy(gameObject);
+		}
 	}
 }

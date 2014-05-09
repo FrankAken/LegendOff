@@ -1,6 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\..\..\..\Workspace\LastIgnition\Assets\Scripts\GameModes\CircuitModePlayerStats.cs">
+    <Files>
+      <File FileName="..\..\..\..\..\Workspace\LastIgnition\Assets\Scripts\GameModes\Checkpoint.cs" Line="1" Column="1" />
+      <File FileName="..\..\..\..\..\Workspace\LastIgnition\Assets\Scripts\Controller\TwoLocalPlayerGameController.cs" Line="1" Column="1" />
+      <File FileName="..\..\..\..\..\Workspace\LastIgnition\Assets\Scripts\GameModes\CircuitModePlayerStats.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

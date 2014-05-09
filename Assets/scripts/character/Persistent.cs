@@ -10,6 +10,8 @@ public class Persistent : MonoBehaviour {
 
 	//der Spieler
 		public GameObject player;
+		GameObject drop;
+		public int deathCounter;
 
 	//Werte des Spielers
 		//Name
@@ -70,25 +72,33 @@ public class Persistent : MonoBehaviour {
 		public float dashDuration;
 		public float speed;
 		public Vector3 spawn;
+		public int ViewDir;
 
 	//Backups
 		float _speed;
 
-	//Werte für Weltinteraktion
-		public bool interactable;
-		public string lastLevel;
-
 	//Kamera-Einstellungen
+		public Camera playerCamera;
 		public float camHeight;
 		public float camSpeed;
 
+	//Prefabs
+		public GameObject dropPrefab;
 	//Instanzen
-		GameObject playerInstance;
-		GameObject armorInstance;
+		public GameObject playerInstance;
+		public GameObject weaponInstance;
+		public GameObject cuirassInstance;
 
 	//Physik
 		//beeinflusst wie stark das Gewicht der Rüstung sich auf die physikalische Masse auswirkt
-		public float armorDivider;
+		public float weightDivider;
+
+	//Welche Bosse sind besiegt?		
+		//Tür zum letzten Boss öffnet sich erst, wenn die beiden ersten besiegt sind
+		public bool lorkhanDefeated = false;
+		public bool oldKnightDefeated = false;
+		//Tür zum letzten Raum öffnet sich nur, wenn alle Bosse besiegt wurden
+		public bool queenDefeated = false;
 
 	void Awake(){
 		//wenn persist leer ist, dann mache aus DIESEM gameObject persist
@@ -101,28 +111,19 @@ public class Persistent : MonoBehaviour {
 		else if(persist != this){
 			Destroy(gameObject);
 		}
+		//Backup von speed
 		_speed = speed;
-		//erstelle Spielerinstanz an spawn
-		playerInstance = (GameObject)Instantiate (player, spawn, Quaternion.identity);
-		//Erstelle Instanz der ausgerüsteten Rüstung
-		armorInstance = (GameObject)Instantiate (cuirass, gameObject.transform.position, Quaternion.identity);
-		armorInstance.transform.position = new Vector3(playerInstance.transform.position.x,playerInstance.transform.position.y,playerInstance.transform.position.z - 0.01f);
-		armorInstance.transform.parent = playerInstance.transform;
-		//drehen, damit der Charakter auch sichtbar ist
-		playerInstance.transform.Rotate (90, 0, 0);
-	}
-
-	void Start(){
+		SpawnPlayer ();
 	}
 
 	void Update(){
 		//wenn der Spieler stirbt, lasse Seelen auf den Boden fallen, setze Spielerseelen auf 0 
 		//dann zerstöre die Spielerinstanz und erzeuge neue Spielerinstanz an spawn
 		if(health <= 0){
-			Instantiate(Resources.Load("Drop"),GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
-			souls = 0;
+			Invoke("SoulsDropped",0f);
+			deathCounter += 1;
 			Destroy (playerInstance);
-			playerInstance = (GameObject)Instantiate (player, spawn, Quaternion.identity);
+			SpawnPlayer();
 		}
 
 		//Verletze den Spieler um poisonDamage alle poisonClock x Sekunden
@@ -161,7 +162,53 @@ public class Persistent : MonoBehaviour {
 			running = false;
 		}
 
+		//ändert die Position und Rotation der Waffe basierend auf der Richtungstaste die während einem Angriff gedrückt ist
+		switch(ViewDir){
+		//bei Angriff nach oben
+		case 1:	
+			if(weaponInstance != null){
+				weaponInstance.transform.localPosition = new Vector3 (2.1f, -0.2f, -0.1f);
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.transform.Rotate(0,0,270);
+			}
+			break;
+		//bei Angriff nach rechts
+		case 3:
+			if(weaponInstance != null){
+				weaponInstance.transform.localPosition = new Vector3 (2.1f, -0.2f, -0.1f);
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.transform.Rotate(0,0,180);
+			}
+			break;
+		//bei Angriff nach unten
+		case 5:
+			if(weaponInstance != null){
+				weaponInstance.transform.localPosition = new Vector3 (2.1f, -0.2f, -0.1f);
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.transform.Rotate(0,0,90);
+			}
+			break;
+		//bei Angriff nach links
+		case 7:
+			if(weaponInstance != null){
+				weaponInstance.transform.localPosition = new Vector3 (-2.1f, -0.2f, -0.1f);
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.transform.Rotate(0,0,360);
+			}
+			break;
+		//bei Angriff während dem Stehen
+		default:
+			if(weaponInstance != null){
+				weaponInstance.transform.localPosition = new Vector3 (2.1f, -0.2f, -0.1f);
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.transform.Rotate(0,0,90);
+			}
+			break;
+		}
+
+		//Basiswerte für Dynamik
 		moving = false;
+		ViewDir = 0;
 	}
 
 	//erschöpft die Ausdauer einmalig um runCost
@@ -169,11 +216,61 @@ public class Persistent : MonoBehaviour {
 		stamina -= runCost;
 	}
 
+	//regeneriert die Ausdauer einmalig um recoveryRate
 	void StaminaRegeneration(){
 		stamina += recoveryRate;
 	}
 
+	//um speed zurücksetzen zu können
 	public float getSpeedBackup(){
 		return _speed;
+	}
+
+	//wird aufgerufen nach Waffen-Upgrade, löscht die alte Instanz und erstellt eine neue, geupgradete an deren Stelle
+	public void UpdateWeapon(){
+		Destroy(weaponInstance);		
+		weaponInstance = (GameObject)Instantiate (weapon, gameObject.transform.position, Quaternion.identity);
+		weaponInstance.transform.parent = playerInstance.transform;		
+		weaponInstance.transform.localPosition = new Vector3 (0.3f, -0.2f, -0.01f);
+		weaponInstance.transform.Rotate (90, 0, 90);
+		weaponInstance.SetActive (false);
+	}
+
+	//wird aufgerufen nach Kürass-Upgrade, löscht die alte Instanz und erstellt eine neue, geupgradete an deren Stelle
+	public void UpdateCuirass(){
+		Destroy (cuirassInstance);
+		cuirassInstance = (GameObject)Instantiate (cuirass, gameObject.transform.position, Quaternion.identity);
+		cuirassInstance.transform.parent = playerInstance.transform;
+		cuirassInstance.transform.localPosition = new Vector3 (0,0, -0.01f);
+		cuirassInstance.transform.Rotate (90, 0, 0);
+	}
+
+	void SoulsDropped(){	
+		if(drop == null){
+			drop = (GameObject)Instantiate(dropPrefab,GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity);
+			drop.transform.Rotate(90,0,0);
+			drop.GetComponent<DroppedPosessions>().StoreSouls(souls);
+		}
+		souls = 0;
+		CancelInvoke("SoulsDropped");
+	}
+
+	void SpawnPlayer(){			
+		health = maxHealth;
+		stamina = maxStamina;
+		//erstelle Spielerinstanz an spawn
+		playerInstance = (GameObject)Instantiate (player, spawn, Quaternion.identity);
+		//Erstelle Instanz der ausgerüsteten Waffe
+		weaponInstance = (GameObject)Instantiate (weapon, gameObject.transform.position, Quaternion.identity);
+		weaponInstance.transform.parent = playerInstance.transform;		
+		weaponInstance.transform.localPosition = new Vector3 (2.1f, -0.2f, -0.1f);
+		weaponInstance.transform.Rotate (0, 0, 90);
+		weaponInstance.SetActive (false);
+		//Erstelle Instanz der ausgerüsteten Rüstung
+		cuirassInstance = (GameObject)Instantiate (cuirass, gameObject.transform.position, Quaternion.identity);
+		cuirassInstance.transform.parent = playerInstance.transform;
+		cuirassInstance.transform.localPosition = new Vector3 (0,0, -0.01f);
+		//drehen, damit der Charakter auch sichtbar ist
+		playerInstance.transform.Rotate (90, 0, 0);
 	}
 }

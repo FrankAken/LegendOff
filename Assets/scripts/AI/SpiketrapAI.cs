@@ -10,19 +10,19 @@ public class SpiketrapAI : MonoBehaviour {
 	public float speed = 7.0f;
 	public Vector3 posA = new Vector3(0,0,0);
 	public Vector3 posB = new Vector3(0,0,0);
-	public Vector3 origPos;
+	public Vector3 origPos;	
+	
+	void Awake(){
+		newPos = posA;
+	}
 
 	void Start(){
 		origPos = transform.position;
 	}
-
-	void Awake(){
-		newPos = posA;
-	}
 	
 	//beweget das gameObject kontinuierlich zwischen posA und posB hin- und her
 	void Update () {
-		if(transform.parent.GetComponent<RoomController>().visited){
+		if(transform.parent.GetComponent<CameraController>().visited){
 			Move();	
 		}
 	}

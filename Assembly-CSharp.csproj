@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;UNITY_64;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -47,24 +47,30 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\scripts\AI\BlacksmithAI.cs" />
+     <Compile Include="Assets\scripts\AI\CrystalAI.cs" />
      <Compile Include="Assets\scripts\AI\DamagePlayer.cs" />
+     <Compile Include="Assets\scripts\AI\GuardianAI.cs" />
+     <Compile Include="Assets\scripts\AI\LorkhanAI.cs" />
+     <Compile Include="Assets\scripts\AI\OldKnightAI.cs" />
+     <Compile Include="Assets\scripts\AI\PetrousQueenAI.cs" />
      <Compile Include="Assets\scripts\AI\SpiketrapAI.cs" />
      <Compile Include="Assets\scripts\AI\Stats.cs" />
-     <Compile Include="Assets\scripts\AI\WarriorAI.cs" />
-     <Compile Include="Assets\scripts\GUI\GUIScale.cs" />
+     <Compile Include="Assets\scripts\AI\ZombieAI.cs" />
      <Compile Include="Assets\scripts\GUI\IngameGUI.cs" />
      <Compile Include="Assets\scripts\GUI\MainMenuGUI.cs" />
-     <Compile Include="Assets\scripts\GUI\TextureScale.cs" />
      <Compile Include="Assets\scripts\GUI\UpgradingGUI.cs" />
-     <Compile Include="Assets\scripts\character\GamepadControls.cs" />
      <Compile Include="Assets\scripts\character\KeyboardControls.cs" />
      <Compile Include="Assets\scripts\character\Persistent.cs" />
      <Compile Include="Assets\scripts\items\ArmorValues.cs" />
-     <Compile Include="Assets\scripts\items\DamageEnemy.cs" />
      <Compile Include="Assets\scripts\items\DroppedPosessions.cs" />
+     <Compile Include="Assets\scripts\items\WeaponValues.cs" />
      <Compile Include="Assets\scripts\level\Beacon.cs" />
+     <Compile Include="Assets\scripts\level\Bossdoor.cs" />
      <Compile Include="Assets\scripts\level\CameraController.cs" />
-     <Compile Include="Assets\scripts\level\RoomController.cs" />
+     <Compile Include="Assets\scripts\level\LorkhanBossdoor.cs" />
+     <Compile Include="Assets\scripts\level\OldKnightBossdoor.cs" />
+     <Compile Include="Assets\scripts\level\QueenBossdoorEntry.cs" />
+     <Compile Include="Assets\scripts\level\QueenBossdoorExit.cs" />
      <Compile Include="Assets\scripts\level\SceneChanger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
